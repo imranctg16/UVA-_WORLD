@@ -1,0 +1,119 @@
+
+/*
+Mohammad Imran hossain
+International Islamic university,Chittagong
+*/
+
+#include<bits/stdc++.h>
+
+using namespace std;
+
+map<int,int>value;
+map<int,int>save;
+map<int,vector<int> >adj;
+
+int n;
+
+void init()
+{
+    for(int i=1; i<=n; i++)
+        save[i]=1e9;
+}
+
+void bellman(int source)
+{
+    init();
+    save[source]=0;
+    int take2;
+    int counter=1;
+    for(int i=1; i<n; i++)
+    {
+        // cout<<"\titeration no= "<<counter++<<endl;
+        bool check;
+        for(int j=1; j<=n; j++)
+        {
+            //bool check=true;
+            //cout<<"vertice no = "<<j<<endl;
+            //cout<<"and its weight= "<<save[j]<<endl;
+            for(int k=0; k<adj[j].size(); k++)
+            {
+                //check=false;
+                int take=adj[j][k];
+               //  cout<<"\t"<<j<<"'s adjacency= "<<take<<endl;
+                // cout<<"adjacency weight= "<<save[take]<<endl;
+                take2=(value[take]-value[j])*(value[take]-value[j])*(value[take]-value[j]);
+               // cout<<"take2= "<<take2<<"take2+save[j]= "<<take2+save[j]<<endl;
+                if(save[j]+take2<save[take]&&save[j]!=1e9)
+                {
+                    save[take]=save[j]+take2;
+                   // cout<<"after relax weight= "<<save[take];
+                }
+            }
+
+        }
+        //if(check)
+            //break;
+       // cout<<"\tafter iteration, values are=\n";
+       // for(int l=1; l<=n; l++)
+          // cout<<" "<<save[l]<<" ";
+        //cout<<endl;
+    }
+    for(int j=1; j<=n; j++)
+    {
+        for(int k=0; k<adj[j].size(); k++)
+        {
+            int take=adj[j][k];
+            //cout<<"\t"<<j<<"'s adjacency= "<<take<<endl;
+            //cout<<"adjacency weight= "<<save[take]<<endl;
+            take2=(value[take]-value[j])*(value[take]-value[j])*(value[take]-value[j]);
+            //cout<<"take2= "<<take2<<"take2+save[j]= "<<take2+save[j]<<endl;
+            if(save[j]+take2<save[take]&&save[j]!=1e9)
+            {
+                save[take]=-1e9;
+                //  cout<<"after relax weight= "<<save[take];
+            }
+        }
+
+    }
+}
+
+int main()
+{
+    int r,q,a,b,counter=1;
+    //freopen("traffic.txt","w+",stdout);
+    while(scanf("%d",&n)==1)
+    {
+
+        for(int i=1; i<=n; i++)
+        {
+            cin>>value[i];
+
+        }
+        cin>>r;
+        for(int i=1; i<=r; i++)
+        {
+            cin>>a>>b;
+            adj[a].push_back(b);
+        }
+        bellman(1);
+        cin>>q;
+        cout<<"Set #"<<counter++<<endl;
+        int desti;
+        while(q--)
+        {
+            cin>>desti;
+           // for(int l=1; l<=n; l++)
+                //cout<<" "<<save[l]<<" ";
+        //cout<<endl;
+            if(save[desti]<3||save[desti]==1e9)
+                cout<<"?"<<endl;
+            else
+                cout<<save[desti]<<endl;
+
+        }
+        adj.clear();
+        value.clear();
+        save.clear();
+    }
+    return 0;
+}
