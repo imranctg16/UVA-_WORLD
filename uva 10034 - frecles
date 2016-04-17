@@ -1,0 +1,108 @@
+/*
+MOhammad Imran Hossain
+iiuc */
+
+#include<bits/stdc++.h>
+#define pairr pair<double,double>
+#define pairr2 pair<double,pairr>
+using namespace std;
+int n;
+pairr p,p1,take;
+pairr2 u;
+vector<pairr>v;
+map<pairr,vector<pairr> >adj;
+map<pairr,map<pairr,double> >weight;
+map<pairr,int>check;
+map<pairr,double>d;
+priority_queue< pairr2,vector<pairr2 >,greater<pairr2 > >q;
+double ans;
+void init()
+{
+    for(int i=0; i<n; i++)
+    {
+        d[v[i]]=1e9;
+    }
+}
+void prim(pairr source)
+{
+    ans=0.0;
+    init();
+    d[source]=0.0;
+    q.push(make_pair(d[source],source));
+    while(!q.empty())
+    {
+        u=q.top();
+        q.pop();
+        if(!check[u.second])
+        {
+            check[u.second]=1;
+            ans=ans+d[u.second];
+            //cout<<"\tselected node\n";
+           // cout<<u.second.first<<" "<<u.second.second<<endl;
+            //cout<<"ans= "<<ans<<endl;
+            for(int i=0; i<adj[u.second].size(); i++)
+            {
+                take=adj[u.second][i];
+                //cout<<"and its adj= \n";
+                //cout<<take.first<<" "<<take.second<<endl;
+                if(!check[take])
+                {
+                    if(weight[u.second][take]<d[take])
+                    {
+                        d[take]=weight[u.second][take];
+                        q.push(make_pair(d[take],take));
+                    }
+                }
+            }
+        }
+    }
+}
+int main()
+{
+    int t;
+    //freopen("frecles.txt","w+",stdout);
+    double a,b,a1,b1,a2,b2,w;
+    scanf("%d\n",&t);
+    while(t--)
+    {
+        scanf("%d",&n);
+        for(int i=1; i<=n; i++)
+        {
+            scanf("%lf\n%lf",&a,&b);
+            p.first=a;
+            p.second=b;
+            v.push_back(p);
+        }
+        for(int i=0; i<n; i++)
+        {
+            p=v[i];
+            for(int j=0; j<n; j++)
+            {
+                p1=v[j];
+                a1= p.first;
+                b1=p.second;
+                a2= p1.first;
+                b2=p1.second;
+                w=sqrt(pow(a2-a1,2)+pow(b2-b1,2));
+                //cout<<"w= "<<w<<endl;
+                adj[p].push_back(p1);
+                adj[p1].push_back(p);
+                weight[p][p1]=w;
+                weight[p1][p]=w;
+            }
+        }
+        prim(v[0]);
+        //cout<<ans<<endl;
+        printf("%.2f\n",ans);
+        v.clear();
+        adj.clear();
+        weight.clear();
+        check.clear();
+        d.clear();
+        if(t)
+            cout<<endl;
+
+    }
+    return 0;
+}
+
