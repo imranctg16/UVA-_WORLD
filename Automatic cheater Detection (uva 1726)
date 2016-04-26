@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+map<int,int>save;
+map<int,int>save2;
+set<int>s1;
+set<int>s2;
+set<int>::iterator it,it2;
+
+int main()
+{
+    char c;
+    int t,n,d,check;
+   //freopen("automatic_cheater_detection.txt","w+",stdout);
+    cin>>t;
+    while(t--)
+    {
+        cin>>n;
+        for(int i=1; i<=n; i++)
+        {
+            cin>>d>>check;
+            cin>>c;
+
+            if(check==0&&c=='i') 
+            {
+                s1.insert(d);
+                save[d]++;
+            }
+            else if(check==1&&c=='c') 
+            {
+                s2.insert(d);
+                save2[d]++;
+            }
+        }
+        int ans=0,ans2=0;
+        for(it=s2.begin();it!=s2.end();it++)
+        {
+            ans=0;
+            for(it2=s1.begin();it2!=s1.end();it2++)
+            {
+                //cout<<"it2= "<<(*it2)<<endl;
+               if((*it)>(*it2))
+               {
+
+                   ans=ans+save[*it2];
+               }
+            }
+            //cout<<"ans= "<<ans<<endl;
+            ans=ans*save2[*it];
+            ans2=ans2+ans;
+        }
+        cout<<ans2<<endl;
+
+        save.clear();
+        save2.clear();
+        s1.clear();
+        s2.clear();
+    }
+    return 0;
+}
